@@ -58,7 +58,10 @@ router.delete('/task/:id', async (req, res) => {
     try {
         //deleting all the todos of the parent task
         const todo = await TodoList.findOneAndDelete({ parentTask: req.params.id });
-        await todo.remove();
+        if(todo) {
+            await todo.remove();
+        }
+        
 
         //deleting the parent task
         const task = await ParentTask.findByIdAndDelete(req.params.id);
@@ -71,7 +74,7 @@ router.delete('/task/:id', async (req, res) => {
 
         res.send(task)
     } catch (error) {
-        res.status(400).send(error)
+        res.status(400).send(error.message)
     }
 })
 
